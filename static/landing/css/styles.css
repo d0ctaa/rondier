@@ -1,0 +1,17 @@
+.box {
+    flex: 1; /* Each box takes equal height */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.box1 {
+    background-color: transparent; /* Semi-transparent black */
+    height: 100%;
+    width: 50%;
+    
+}
+
+.box2 {
+    background-color: transparent; /* Semi-transparent white */
+}

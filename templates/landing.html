@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+
+    <link rel="stylesheet" href="{{url_for ('static', filename='landing/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{url_for ('static', filename='landing/css/NMDIG-Jumbotron-Advanced-Responsive-Tint-1.css') }}">
+    <link rel="stylesheet" href="{{url_for ('static', filename='landing/css/NMDIG-Jumbotron-Advanced-Responsive-Tint.css') }}"> 
+    <link rel="stylesheet" href="{{url_for ('static', filename='landing/css/styles.css') }}"> 
+</head>
+
+
+<body>
+    <section class="bg-img-responsive" style="padding:50px">
+        <div class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/bgimg.png') }}'); background-repeat: no-repeat; background-size: cover;">
+            <div class="jumbotron box1" ></div>
+            <div class="jumbotron box2">
+                <div style="height: 50%;">
+                    <h2>Connexion</h2>
+                    <form method="POST" action="">
+                        {{form.hidden_tag()}}
+                        <p>
+                            {{form.username.label}}
+                            {{form.username(size=64)}}<br>
+                        </p>
+                        <p>
+                            {{form.password.label}}
+                            {{form.password(size=64)}}<br>
+                        </p>
+                        <p>{{form.submit()}}</p>
+                    </form>
+                </div>
+                <div>
+                        test
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{{url_for ('static', filename='landing/js/jquery.min.js') }}"></script>
+    <script src="{{url_for ('static', filename='landing/bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
+
+
+<!--<div class="container tint">
+                <h1 class="text-center">Heading text</h1>
+                <p class="text-center">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.Nullam
+                    id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                <p class="text-center"><a class="btn btn-primary" role="button" href="#">Primary</a></p>
+            </div>-->
