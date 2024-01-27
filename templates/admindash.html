@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="{{url_for ('static', filename='bootstrap/css/bootstrap.min.css') }}"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="{{url_for ('static', filename='fonts/fontawesome-all.min.css') }}">
+    <style>
+        .container {
+          display: flex;
+        }
+        .item {
+          margin: 10px;
+          padding: 10px;
+          border: 1px solid #000;
+        }
+        .label {
+            text-align: center;
+        }
+      </style>
 </head>
 
 <body id="page-top">
@@ -24,7 +37,21 @@
                     <li class="nav-item" role="presentation"><a class="nav-link" href="/profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" id="show-user-list" href="#"><i class="fas fa-table"></i><span>Users List</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" id="show-user-registration" href="#"><i class="far fa-user-circle"></i><span>Add User</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" id="show-new-role-form" href="#"><i class="far fa-user-circle"></i><span>Roles</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" id="show-new-role-form" href="#"><i class="bi bi-person-badge"></i><span>Roles</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" id="show-device-categories" href="#"><i class="bi bi-building-gear"></i><span>Add Device</span></a></li>
+                    <div class="btn-group dropright">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="show-device-categories" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bi bi-building-gear"></i><span>Add Device</span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <!-- Dropdown menu links -->
+                                <a class="dropdown-item" href="#">Action 1</a>
+                                <a class="dropdown-item" href="#">Action 2</a>
+                                <a class="dropdown-item" href="#">Action 3</a>
+                            </div>
+                        </li>
+                    </div>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -79,7 +106,7 @@
 <!--Start of Dynamic Content Display-->
             <div id="dynamic-content">
                 <!-- Code For Displaying new employee registration form.-->
-                <div class="card-body" id="user-registration" style="display: none;">
+                <div %%class="card-body" id="user-registration" style="display: none;">
                     <form action="" method="post">
                         {{form.hidden_tag()}}
                         <p>
@@ -168,7 +195,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body" id="new-role-form" style="display: none;">
+                <!--Code for displaying new role registratgion form-->
+                <d iv class="card-body" id="new-role-form" style="display: none;">
                     <form action="" method="post">
                         {{formR.hidden_tag()}}
                         <p>
@@ -187,6 +215,22 @@
                         <p>{{ formR.submit() }} </p>
                     </form>
                 </div>
+
+                <!--New cofde goes here-->
+                <div class="container" id="device-categories" style="display: none;">
+                    {% for item in categories_list%}
+                    <div class="item">
+                        <a href="form.html">{{item.name}}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!--New cofde goes here-->
+                <div>
+
+                </div>
+                <!--New cofde goes here-->
+                <!--New cofde goes here-->
             </div>
         </div>
         
@@ -208,19 +252,29 @@
             event.preventDefault(); // Prevent the default link behavior
             document.getElementById('user-registration').style.display = 'block';
             document.getElementById('user-list').style.display = 'none'; 
-            document.getElementById('new-role-form').style.display = 'none';// Show the form
+            document.getElementById('new-role-form').style.display = 'none';
+            document.getElementById('device-categories').style.display = 'none';// Show the form
         });
         document.getElementById('show-user-list').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default link behavior
             document.getElementById('user-registration').style.display = 'none';
             document.getElementById('user-list').style.display = 'block'; 
-            document.getElementById('new-role-form').style.display = 'none';// Show the form
+            document.getElementById('new-role-form').style.display = 'none';
+            document.getElementById('device-categories').style.display = 'none';// Show the form
         });
         document.getElementById('show-new-role-form').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default link behavior
             document.getElementById('user-registration').style.display = 'none';
             document.getElementById('user-list').style.display = 'none'; 
-            document.getElementById('new-role-form').style.display = 'block';// Show the form
+            document.getElementById('new-role-form').style.display = 'block';
+            document.getElementById('device-categories').style.display = 'none';// Show the form
+        });
+        document.getElementById('show-device-categories').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById('user-registration').style.display = 'none';
+            document.getElementById('user-list').style.display = 'none'; 
+            document.getElementById('new-role-form').style.display = 'none';
+            document.getElementById('device-categories').style.display = 'block';// Show the form
         });
     </script>
 </body>

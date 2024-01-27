@@ -7,7 +7,7 @@ from wtforms import StringField, IntegerField, SubmitField, PasswordField, DateF
 from wtforms.validators import DataRequired
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required
-from flask_security import RoleMixin, Security, SQLAlchemyUserDatastore
+from flask_security import Security, SQLAlchemyUserDatastore, RoleMixin
 #from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 
@@ -29,7 +29,7 @@ login_manager.login_view = "welcome"
 ##------------------------------------------------------------------
 ## Database URI configuration
 ##------------------------------------------------------------------
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://sqladmin:Password!@rondiersql.postgres.database.azure.com:5432/rondier-db-01'
+app.config['SQLALCHEMY_DATABASE_URI']='postgresql://sqladmin:pwd0000!@rondiersql.postgres.database.azure.com:5432/rondier-db-01'
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 
@@ -45,7 +45,53 @@ def user_loader(employee_id):
 ##########################-----------------------------------------------
 ######### Model Configurations
 #########-----------------------------------------------------------------
-    
+
+
+#Model for the transformer category
+class Transformers(db.Model):
+    __tablename__ = 'Transformers'
+    __table_args__ = {'schema': 'r-schema-01'}
+    id = db.Column(db.Integer, primary_key=True) #Serial Number because it will be unique to each device
+    manufacturer = db.Column(db.String(32))
+    model = db.Column(db.String(32))
+    type = db.Column(db.String(32))
+    rated_voltage_1 = db.Column(db.String(32))
+    rated_voltage_2 = db.Column(db.String(32)) 
+    rated_power =  db.Column(db.String(32)) #Rated Power (kVA or MVA)
+    rated_frequency = db.Column(db.String(32))
+    winding_Conf = db.Column (db.String(32)) #Winding Configuration
+    impedance_voltage = db.Column(db.String(32)) #(%Z)
+    insulation_class = db.Column(db.String(32))
+    standard = db.Column(db.String(32))
+
+
+#Model for the transformer category
+class CircuitBraker(db.Model):
+    __tablename__ = 'CircuitBraker'
+    __table_args__ = {'schema': 'r-schema-01'}
+    id = db.Column(db.Integer, primary_key=True) #Serial Number because it will be unique to each device
+    manufacturer = db.Column(db.String(32))
+    model = db.Column(db.String(32))
+    type = db.Column(db.String(32))
+    rated_voltage = db.Column(db.String(32)) #Maximum voltage of safe operation
+    rated_current = db.Column(db.String(32)) #Maximum safe continious current carrying capacity
+    pole_conf = db.Column(db.String(32)) #Number of pole configuration
+    trip_unit_type = db.Column(db.String(32)) #Type of trip unit used for for overcurrent protection
+    trip_current_rating = db.Column(db.String(32)) #current value at the breaker wil trip
+    operating_vol = db.Column(db.String(32)) #Operating Voltage
+    standard = db.Column(db.String(32))
+
+
+
+#model for the different categories of devices found in a energy center
+class Categories(db.Model):
+    __tablename__ = 'Categories'
+    __table_args__ = {'schema': 'r-schema-01'}
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    code = db.Column(db.String(32))
+    description = db.Column(db.String(255))
+
 
 class roles(RoleMixin, db.Model):
     __tablename__ = 'Roles'
@@ -122,12 +168,41 @@ security = Security(app, user_datastore)
 ##--------------------------------------------------------
 ## Forms Field configuration
 ## -------------------------------------------------------
+
+class CircuitBrakerForm(FlaskForm):
+    id = StringField('Serial Number') #Serial Number because it will be unique to each device
+    manufacturer = StringField('Manufacturer')
+    model = StringField('Model')
+    type = StringField('Type')
+    rated_voltage = StringField('Rated Voltage') #Maximum voltage of safe operation
+    rated_current = StringField('Rated Current') #Maximum safe continious current carrying capacity
+    pole_conf = IntegerField('Pole Configuration') #Number of pole configuration
+    trip_unit_type = StringField('Trip Unit Type') #Type of trip unit used for for overcurrent protection
+    trip_current_rating = IntegerField('Trip Current Rating') #current value at the breaker wil trip
+    operating_vol = IntegerField('Operating Voltage') #Operating Voltage
+    standard = StringField('Standard/Certification')
+    submit = SubmitField('Submit')
+
+class TransformersForm(FlaskForm):
+    id = StringField('Serial Number') #Serial Number because it will be unique to each device
+    manufacturer = StringField('Manufacturer')
+    model = StringField('Model')
+    type = StringField('Type')
+    rated_voltage_1 = StringField('Rated Voltage I')
+    rated_voltage_2 = StringField('Rated Voltage II')
+    rated_power =  StringField('Rated Power') #Rated Power (kVA or MVA)
+    rated_frequency = StringField('Rated Frequency')
+    winding_Conf = StringField('Winding Configuration') #Winding Configuration
+    impedance_voltage = StringField('Impedence Voltage') #(%Z)
+    insulation_class = StringField('Insulation Class')
+    standard = StringField('Standard/Certification')
+    submit = SubmitField('Submit')
+
 class RolesForm(FlaskForm):
     r_id = StringField('Role Code')
     r_name = StringField('Role Name')
     r_description = StringField('Role Description')
     submit = SubmitField('Submit')
-
 
 class EmployeeForm(FlaskForm):
     fname = StringField('First Name')
@@ -138,9 +213,6 @@ class EmployeeForm(FlaskForm):
     password = PasswordField('Password')
     username = StringField('User Name')
     submit = SubmitField('Submit')
-
-
-
 
 class MachineForm(FlaskForm):
     make = StringField('Make')
@@ -182,12 +254,54 @@ def hello_world():
 @app.route("/admin", methods=['GET', 'POST'])
 #@login_required
 def admin():
+
+    #Display form to add Transformer
+    formT = TransformersForm()
+    if formT.validate_on_submit():
+        trsf = Transformers(
+            id = formT.id.data,
+            manufacturer = formT.manufacturer.data,
+            model = formT.model.data,
+            type = formT.type.data,
+            rated_voltage_1 = formT.rated_voltage_1.data,
+            rated_voltage_2 = formT.rated_voltage_2.data,
+            rated_power = formT.rated_power.data,
+            rated_frequency = formT.rated_frequency.data,
+            winding_Conf = formT.winding_Conf.data,
+            impedance_voltage = formT.impedance_voltage.data,
+            insulation_class = formT.insulation_class.data,
+            standard = formT.standard.data 
+        )
+        db.session.add(trsf)
+        db.session.commit()
+
+    #Display Circuit Braker Form 
+    formC = CircuitBrakerForm()
+    if formC.validate_on_submit():
+        cbkr = CircuitBraker(
+
+            id = formC.id.data, #Serial Number because it will be unique to each device
+            manufacturer = formC.manufacturer.data,
+            model = formC.model.data,
+            type = formC.type.data,
+            rated_voltage = formC.rated_voltage.data, #Maximum voltage of safe operation
+            rated_current = formC.rated_current.data, #Maximum safe continious current carrying capacity
+            pole_conf = formC.pole_conf.data, #Number of pole configuration
+            trip_unit_type = formC.trip_unit_type.data, #Type of trip unit used for for overcurrent protection
+            trip_current_rating = formC.trip_current_rating.data, #current value at the breaker wil trip
+            operating_vol = formC.operating_vol.data, #Operating Voltage
+            standard = formC.standard.data
+        )
+        db.session.add(cbkr)
+        db.session.commit()
+
+
+
     #display employees list
     employee_list = EmployeeDetail.query.with_entities(EmployeeDetail.FirstName, EmployeeDetail.LastName, EmployeeDetail.email).all()
 
-
-    #Display List of Machines
-
+    #Display Categories
+    categories_list = Categories.query.with_entities(Categories.name, Categories.description).all()
 
     # Display user roles creation form
     formR = RolesForm()
@@ -199,7 +313,6 @@ def admin():
 
         db.session.add(role)
         db.session.commit()
-
 
 
     # Display employee registration form
@@ -220,7 +333,7 @@ def admin():
         db.session.commit()
         flash('New Employee added successfully')
         return redirect(url_for('admin'))
-    return render_template('admindash.html', form=form, employee_list=employee_list, formR=formR)
+    return render_template('admindash.html', form=form, employee_list=employee_list, formR=formR, categories_list=categories_list)
 
 
 @app.route("/new_machine", methods=['GET', 'POST'])
