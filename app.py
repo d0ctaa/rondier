@@ -29,7 +29,7 @@ login_manager.login_view = "welcome"
 ##------------------------------------------------------------------
 ## Database URI configuration
 ##------------------------------------------------------------------
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://sqladmin:pwd0000!@rondiersql.postgres.database.azure.com:5432/rondier-db-01'
+app.config['SQLALCHEMY_DATABASE_URI']=''
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 
