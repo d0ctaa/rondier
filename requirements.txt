@@ -11,7 +11,7 @@ click==8.1.7
 cryptography==44.0.1
 dnspython==2.6.1
 email-validator==2.1.0.post1
-filelock==3.13.1
+filelock==3.20.3
 Flask==3.0.1
 Flask-Admin==1.6.1
 Flask-BabelEx==0.9.4
